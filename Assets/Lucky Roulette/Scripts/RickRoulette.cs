@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class RickRoulette : MonoBehaviour
 {
+    #region Variables
     ContentMediator mediator;
+    FinalScreenController finalScreenController;
 
     [Header("Roulette")]
     public Transform rouletteSpin;
@@ -32,7 +34,8 @@ public class RickRoulette : MonoBehaviour
     public List<string> currentNames = new List<string>();
     List<int> currentIds = new List<int>();
     int numberOfCharacters = 12;
-    int selectedId;
+    int selectedId; 
+    #endregion
 
 
     #region Initialization
@@ -53,26 +56,20 @@ public class RickRoulette : MonoBehaviour
     void GetStartingComponents()
     {
         
-        
-
+ 
         mediator = GetComponent<ContentMediator>();
         mediator.InitializeComponents(SetCharacterCount);
-
-        //numberOfCharacters = mediator.GetNumberOfCharacters();
-        //currentIds = GenerateRandomIds(numberOfCharacters);
-        //mediator.GetCharacterData(currentIds, SetCharacterNames, SetCharacterImages);
-
 
         rotateButton = rouletteScreen.transform.Find("Bottom Bar/Button").GetComponent<Button>();
         nameText = nameScreen.transform.Find("Bar/Button/Text").GetComponent<Text>();
         characterDisplay = nameScreen.transform.Find("Image").GetComponent<RawImage>();
 
+        finalScreenController = nameScreen.GetComponent<FinalScreenController>();
+        finalScreenController.InitializeComponents(characterDisplay.transform);
+
         overlay.alpha = 1.0f;
         rotateButton.interactable = false;
         nameScreen.SetActive(false);
-
-
-
     }
 
 
@@ -99,6 +96,8 @@ public class RickRoulette : MonoBehaviour
     void SetStartingComponents()
     {
         SetNameDisplays();
+
+
     }
 
     void SetNameDisplays()
@@ -210,6 +209,7 @@ public class RickRoulette : MonoBehaviour
     #endregion
 
 
+    #region Roulette Spin
     public void SpinButton()
     {
         rotateButton.interactable = false;
@@ -234,13 +234,6 @@ public class RickRoulette : MonoBehaviour
 
         StartCoroutine(RotateRoulette(id, angle));
     }
-
-    public void BackButton()
-    {
-        ReloadRoulette();
-    }
-
-
     IEnumerator RotateRoulette(int id, int angle)
     {
         int currentAngle = 0;
@@ -260,7 +253,7 @@ public class RickRoulette : MonoBehaviour
 
             rouletteSpin.Rotate(new Vector3(0, 0, -increase));
 
-            currentAngle+= increase;
+            currentAngle += increase;
             yield return new WaitForSeconds(0.01f);
         }
 
@@ -275,14 +268,6 @@ public class RickRoulette : MonoBehaviour
     }
 
 
-    void LoadNextScreen()
-    {
-
-        nameScreen.SetActive(true);
-        namesParent.gameObject.SetActive(false);  
-
-    }
-
     void ToggleNameDisplays(bool active)
     {
         for (int i = 0; i < nameDisplays.Count; i++)
@@ -291,6 +276,23 @@ public class RickRoulette : MonoBehaviour
         }
     }
 
+
+    #endregion
+
+    public void BackButton()
+    {
+        ReloadRoulette();
+    }
+
+
+
+    void LoadNextScreen()
+    {
+        nameScreen.SetActive(true);
+        namesParent.gameObject.SetActive(false);
+
+        finalScreenController.ImagePopup();
+    }
 
     void ReloadRoulette()
     {

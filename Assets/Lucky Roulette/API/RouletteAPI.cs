@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 using SimpleJSON;
 using UnityEngine.UI;
 using System;
-//using TMPro;
+
 
 public class RouletteAPI : MonoBehaviour
 {
@@ -70,9 +70,6 @@ public class RouletteAPI : MonoBehaviour
 
     }
 
-
-
-
     #region Check if the character count if valid
 
     public void CheckIfValidIndex(int id,Action<bool> callback)
@@ -111,20 +108,15 @@ public class RouletteAPI : MonoBehaviour
 
     #endregion
 
-
+    #region Get initial Count
     public void StartArrayCoroutine(Action<int> callback)
     {
         StartCoroutine(GetPokemonList(callback));
     }
 
-
-
     IEnumerator GetPokemonList(Action<int> callback)
     {
         string pokemonURL = listURL;
-        //string pokemonURL = basePokeURL + "pokemon/" + 1;
-        //string pokemonURL = "https://rickandmortyapi.com/api/character";
-
 
         UnityWebRequest pokeInfoRequest = UnityWebRequest.Get(pokemonURL);
 
@@ -137,26 +129,13 @@ public class RouletteAPI : MonoBehaviour
         }
 
 
-        //JSONNode pokeInfo = JSON.Parse(pokeInfoRequest.downloadHandler.text);
 
         JSONNode pokeList = JSON.Parse(pokeInfoRequest.downloadHandler.text);
 
-        //Debug.Log(pokeList.ToString());
-   
-
         string pokeCount = pokeList["count"];
-        //string pokeName = pokeList["name"];
-
-        Debug.Log(pokeCount);
-        //string pokeSpriteURL = pokeInfo["sprites"]["front_default"];
-
-
-
         callback(int.Parse(pokeCount));
-        //callback(850);
-
-
     }
 
+    #endregion
 
 }

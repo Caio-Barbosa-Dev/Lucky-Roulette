@@ -35,13 +35,6 @@ public class ContentMediator : MonoBehaviour
     }
 
 
-    //public int GetNumberOfCharacters()
-    //{
-    //    return 12;
-    //}
-
-
-
     void ValidateCharacterCount(bool valid)
     {
         if (!valid)
